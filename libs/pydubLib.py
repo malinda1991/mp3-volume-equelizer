@@ -1,47 +1,26 @@
+# Library for the pydub
 from pydub import AudioSegment
+from utils import utils
 
-targetDbfsLevel = -11.5
-
-def println(text):
-    print(text + "\n")
-
-def getSongInfo(filePath):
-    println("Reading " + filePath)
+def getAudioInfo(path, fileName):
+    filePath = utils.buildFilePath(path, fileName)
+    utils.println("Reading " + filePath)
     return AudioSegment.from_mp3(filePath)
-    
-
-def convertSongDuration(durationInMiliseconds):
-    totalSeconds = durationInMiliseconds / 1000
-    minutes = totalSeconds / 60
-    remainingSeconds = totalSeconds % 60
-    return {
-        "minutes" : str(int(minutes)),
-        "seconds" : str(int(remainingSeconds))
-    }
-    
-    
-def printSongInfo(songInfo):
-    convertedSongDuration = convertSongDuration(len(songInfo))
-    
-    println("-------------Song Info------------")
-    println("Duration = " + convertedSongDuration["minutes"] + " Minutes " + convertedSongDuration["seconds"] + " Seconds ")
-    println("Loudness in dbfs = " + str(songInfo.dBFS))
-    println("Loudness in  rms = " + str(songInfo.rms))
-    println("Max Loudness = " + str(songInfo.max))
-    println("Max Loudness dbfs = " + str(songInfo.max_dBFS))
-    
-    println("---------------------------")
-    
-def normalizeAudio(songInfo, exportFilePath):
-    dbfsDifference = targetDbfsLevel - songInfo.dBFS
+        
+def normalizeAudio(songInfo, exportPath, exportFileName):
+    dbfsDifference = utils.targetDbfsLevelDefault - songInfo.dBFS
     if dbfsDifference != 0:
         # should normalize
-        println("Normalizing")
+        utils.println("Normalizing")
+        utils.println("Setting the volume level from " + str(songInfo.dBFS) + " to " + str(utils.targetDbfsLevelDefault))
         normalizedAudio = songInfo.apply_gain(dbfsDifference)
+        
+        utils.println("Exporting")
+        exportFilePath = utils.buildFilePath(exportPath, exportFileName)
         normalizedAudio.export(exportFilePath)
-        println("Successfully exported to " + exportFilePath)
+        utils.println("Successfully exported to " + exportFilePath)
     else:
-        println("volume is already normalized at " + str(targetDbfsLevel) + "dbfs")    
+        utils.println("volume is already normalized at " + str(utils.targetDbfsLevelDefault) + "dbfs")    
     
 
     
