@@ -6,21 +6,22 @@ from utils import utils
 # main function
 
 exportPath = "volume-normalized"
-sourcePath = "songs"
 
 try:
     
-    targetDbfs = input("Target volume level in dbfs : default "+str(utils.targetDbfsLevelDefault)+" - ")
+    currentDir = utils.getCurrentDirectory()
     
-    utils.createDirectory(exportPath)
+    audioFileNames = utils.getMp3FilesInDirectory(currentDir)
     
-    audioFileNames = utils.getMp3FilesInDirectory(sourcePath)
-    
-    for fileName in audioFileNames:
-        song = Audio(fileName, sourcePath, exportPath, targetDbfs)
-        song.printInfo()
-        song.normalizeVolume()
-        song.export()
+    if len(audioFileNames) > 0:
+        targetDbfs = input("Target volume level in dbfs : default "+str(utils.targetDbfsLevelDefault)+" - ")
+        utils.createDirectory(exportPath)
+        
+        for fileName in audioFileNames:
+            song = Audio(fileName, currentDir, exportPath, targetDbfs)
+            song.printInfo()
+            song.normalizeVolume()
+            song.export()
     
 except Exception as e:
     print("Error occurred", e)
