@@ -1,47 +1,29 @@
+# Library for the pydub
 from pydub import AudioSegment
+from utils import utils
 
-targetDbfsLevel = -11.5
-
-def println(text):
-    print(text + "\n")
-
-def getSongInfo(filePath):
-    println("Reading " + filePath)
+def getAudioInfo(path, fileName):
+    filePath = utils.buildFilePath(path, fileName)
+    utils.println("Reading " + filePath)
     return AudioSegment.from_mp3(filePath)
-    
-
-def convertSongDuration(durationInMiliseconds):
-    totalSeconds = durationInMiliseconds / 1000
-    minutes = totalSeconds / 60
-    remainingSeconds = totalSeconds % 60
-    return {
-        "minutes" : str(int(minutes)),
-        "seconds" : str(int(remainingSeconds))
-    }
-    
-    
-def printSongInfo(songInfo):
-    convertedSongDuration = convertSongDuration(len(songInfo))
-    
-    println("-------------Song Info------------")
-    println("Duration = " + convertedSongDuration["minutes"] + " Minutes " + convertedSongDuration["seconds"] + " Seconds ")
-    println("Loudness in dbfs = " + str(songInfo.dBFS))
-    println("Loudness in  rms = " + str(songInfo.rms))
-    println("Max Loudness = " + str(songInfo.max))
-    println("Max Loudness dbfs = " + str(songInfo.max_dBFS))
-    
-    println("---------------------------")
-    
-def normalizeAudio(songInfo, exportFilePath):
+        
+def normalizeAudio(songInfo, targetDbfsLevel):
     dbfsDifference = targetDbfsLevel - songInfo.dBFS
     if dbfsDifference != 0:
         # should normalize
-        println("Normalizing")
-        normalizedAudio = songInfo.apply_gain(dbfsDifference)
-        normalizedAudio.export(exportFilePath)
-        println("Successfully exported to " + exportFilePath)
+        utils.println("Normalizing")
+        utils.println("Setting the volume level from " + str(songInfo.dBFS) + " to " + str(targetDbfsLevel))
+        return songInfo.apply_gain(dbfsDifference)
+
     else:
-        println("volume is already normalized at " + str(targetDbfsLevel) + "dbfs")    
+        utils.println("volume is already normalized at " + str(targetDbfsLevel) + "dbfs")    
+        return None
+    
+def exportAudioFile(normalizedAudio, exportPath, exportFileName):
+    utils.println("Exporting")
+    exportFilePath = utils.buildFilePath(exportPath, exportFileName)
+    normalizedAudio.export(exportFilePath)
+    utils.println("Successfully exported to " + exportFilePath)
     
 
     
