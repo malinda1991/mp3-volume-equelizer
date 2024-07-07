@@ -40,13 +40,20 @@ class Audio:
         
         utils.println("---------------------------")
     
-    # Normalizes the audio and exports the file
+    # Normalizes the audio
     #
     # @author Sandun Munasinghe
     # @since 6/7/2024
     def normalizeVolume(self):
         self.updatedAudio = pydubLib.normalizeAudio(self.audioInfo)
-        
+    
+    # Exports the updated audio to a file
+    #
+    # @author Sandun Munasinghe
+    # @since 6/7/2024    
     def export(self):
-        pydubLib.exportAudioFile(self.updatedAudio, self.dstFilePath, self.fileName)
+        if not self.updatedAudio is None:
+            pydubLib.exportAudioFile(self.updatedAudio, self.dstFilePath, self.fileName)
+        else:
+            utils.println("No audio file to export")
                 
