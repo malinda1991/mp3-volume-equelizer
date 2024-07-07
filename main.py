@@ -3,24 +3,37 @@ import traceback
 from app import Audio
 from utils import utils
 
+class AppHeader:
+    
+    versionNumber = "1.2"
+    
+    @classmethod
+    def printAppHeader(cls):
+        utils.println("MP3 Volume Equelizer Version " + cls.versionNumber)
+        utils.println("A simple volume equeliver based on Pydub Python library")
+    
+
 # main function
 
 exportPath = "volume-normalized"
-sourcePath = "songs"
 
 try:
     
-    targetDbfs = input("Target volume level in dbfs : default "+str(utils.targetDbfsLevelDefault)+" - ")
+    AppHeader.printAppHeader()
     
-    utils.createDirectory(exportPath)
+    currentDir = utils.getCurrentDirectory()
     
-    audioFileNames = utils.getMp3FilesInDirectory(sourcePath)
+    audioFileNames = utils.getMp3FilesInDirectory(currentDir)
     
-    for fileName in audioFileNames:
-        song = Audio(fileName, sourcePath, exportPath, targetDbfs)
-        song.printInfo()
-        song.normalizeVolume()
-        song.export()
+    if len(audioFileNames) > 0:
+        targetDbfs = input("Target volume level in dbfs : default "+str(utils.targetDbfsLevelDefault)+" - ")
+        utils.createDirectory(exportPath)
+        
+        for fileName in audioFileNames:
+            song = Audio(fileName, currentDir, exportPath, targetDbfs)
+            song.printInfo()
+            song.normalizeVolume()
+            song.export()
     
 except Exception as e:
     print("Error occurred", e)

@@ -21,3 +21,6 @@ def getMp3FilesInDirectory(dirPath):
 def createDirectory(dirPath):
     if not os.path.exists(dirPath):
         os.makedirs(dirPath)
+        
+def getCurrentDirectory():
+    return os.getcwd()
