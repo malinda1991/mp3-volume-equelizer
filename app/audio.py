@@ -12,6 +12,7 @@ class Audio:
         self.dstFilePath = dstFilePath
         self.targetVolumeLevel = targetVolumeLevel
         self.audioInfo = pydubLib.getAudioInfo(srcFilePath, fileName)
+        self.updatedAudio = None
     
     # Prints the technical info of the audio file        
     #
@@ -44,5 +45,8 @@ class Audio:
     # @author Sandun Munasinghe
     # @since 6/7/2024
     def normalizeVolume(self):
-        pydubLib.normalizeAudio(self.audioInfo, self.dstFilePath, self.fileName)
+        self.updatedAudio = pydubLib.normalizeAudio(self.audioInfo)
+        
+    def export(self):
+        pydubLib.exportAudioFile(self.updatedAudio, self.dstFilePath, self.fileName)
                 
