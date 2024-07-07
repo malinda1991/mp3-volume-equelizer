@@ -6,13 +6,19 @@ from utils import utils
 # @since 6/7/2024
 class Audio:
     
-    def __init__(self, fileName, srcFilePath, dstFilePath, targetVolumeLevel = utils.targetDbfsLevelDefault):
+    def __init__(self, fileName, srcFilePath, dstFilePath, targetVolumeLevel):
         self.fileName = fileName
         self.srcFilePath = srcFilePath
         self.dstFilePath = dstFilePath
-        self.targetVolumeLevel = targetVolumeLevel
+        self.targetVolumeLevel = utils.targetDbfsLevelDefault
         self.audioInfo = pydubLib.getAudioInfo(srcFilePath, fileName)
         self.updatedAudio = None
+        
+        if targetVolumeLevel != "":
+            utils.println("Setting volume to "+targetVolumeLevel)        
+            self.targetVolumeLevel = float(targetVolumeLevel)
+        else:
+            utils.println("No target volume level is given, continues on default volume level "+str(utils.targetDbfsLevelDefault))
     
     # Prints the technical info of the audio file        
     #
@@ -45,7 +51,7 @@ class Audio:
     # @author Sandun Munasinghe
     # @since 6/7/2024
     def normalizeVolume(self):
-        self.updatedAudio = pydubLib.normalizeAudio(self.audioInfo)
+        self.updatedAudio = pydubLib.normalizeAudio(self.audioInfo, self.targetVolumeLevel)
     
     # Exports the updated audio to a file
     #
