@@ -3,11 +3,23 @@ import traceback
 from app import Audio
 from utils import utils
 
+class AppHeader:
+    
+    versionNumber = "1.2"
+    
+    @classmethod
+    def printAppHeader(cls):
+        utils.println("MP3 Volume Equelizer Version " + cls.versionNumber)
+        utils.println("A simple volume equeliver based on Pydub Python library")
+    
+
 # main function
 
 exportPath = "volume-normalized"
 
 try:
+    
+    AppHeader.printAppHeader()
     
     currentDir = utils.getCurrentDirectory()
     
