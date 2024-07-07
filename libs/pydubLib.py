@@ -13,6 +13,14 @@ def normalizeAudio(songInfo, targetDbfsLevel):
         # should normalize
         utils.println("Normalizing")
         utils.println("Setting the volume level from " + str(songInfo.dBFS) + " to " + str(targetDbfsLevel))
+        
+        if dbfsDifference > 0:
+            # makes audio louder
+            utils.println("Increasing volume by "+ str(dbfsDifference))
+        else:
+            # makes audio quieter
+            utils.println("Reducing volume by "+ str(dbfsDifference))
+            
         return songInfo.apply_gain(dbfsDifference)
 
     else:
@@ -24,6 +32,11 @@ def exportAudioFile(normalizedAudio, exportPath, exportFileName):
     exportFilePath = utils.buildFilePath(exportPath, exportFileName)
     normalizedAudio.export(exportFilePath)
     utils.println("Successfully exported to " + exportFilePath)
+    
+def fadeOut(songInfo, durationInSeconds = 0):
+    utils.println("Fading out for "+ str(durationInSeconds) + " seconds")
+    durationInMiliseconds = durationInSeconds * 1000
+    return songInfo.fade_out(durationInMiliseconds)
     
 
     

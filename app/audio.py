@@ -62,4 +62,12 @@ class Audio:
             pydubLib.exportAudioFile(self.updatedAudio, self.dstFilePath, self.fileName)
         else:
             utils.println("No audio file to export")
-                
+
+    # Fades out the volume at the end of the audio file
+    #
+    # @author Sandun Munasinghe
+    # @since 7/7/2024               
+    def fadeOutAtEnd(self):
+        durationInSeconds = 8
+        self.updatedAudio = pydubLib.fadeOut(self.updatedAudio, durationInSeconds)
+        

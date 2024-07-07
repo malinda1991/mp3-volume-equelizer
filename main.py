@@ -5,7 +5,7 @@ from utils import utils
 
 class AppHeader:
     
-    versionNumber = "1.2"
+    versionNumber = "1.3.0"
     
     @classmethod
     def printAppHeader(cls):
@@ -33,6 +33,7 @@ try:
             song = Audio(fileName, currentDir, exportPath, targetDbfs)
             song.printInfo()
             song.normalizeVolume()
+            song.fadeOutAtEnd()
             song.export()
     
 except Exception as e:
