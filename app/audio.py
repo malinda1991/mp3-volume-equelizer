@@ -12,13 +12,19 @@ class Audio:
         self.dstFilePath = dstFilePath
         self.targetVolumeLevel = utils.targetDbfsLevelDefault
         self.audioInfo = pydubLib.getAudioInfo(srcFilePath, fileName)
+        self.originalMediaInfo = pydubLib.getMediaInfo(srcFilePath, fileName)
         self.updatedAudio = None
+        self.exportParameters = {
+            "bitrate" : self.originalMediaInfo['bit_rate'],
+            "format" : self.originalMediaInfo['format_name']
+        }
         
         if targetVolumeLevel != "":
             utils.println("Setting volume to "+targetVolumeLevel)        
             self.targetVolumeLevel = float(targetVolumeLevel)
         else:
             utils.println("No target volume level is given, continues on default volume level "+str(utils.targetDbfsLevelDefault))
+    
     
     # Prints the technical info of the audio file        
     #
@@ -43,8 +49,8 @@ class Audio:
         utils.println("Loudness in  rms = " + str(self.audioInfo.rms))
         utils.println("Max Loudness = " + str(self.audioInfo.max))
         utils.println("Max Loudness dbfs = " + str(self.audioInfo.max_dBFS))
-        
         utils.println("---------------------------")
+        
     
     # Normalizes the audio
     #
@@ -59,7 +65,7 @@ class Audio:
     # @since 6/7/2024    
     def export(self):
         if not self.updatedAudio is None:
-            pydubLib.exportAudioFile(self.updatedAudio, self.dstFilePath, self.fileName)
+            pydubLib.exportAudioFile(self.updatedAudio, self.dstFilePath, self.fileName, self.exportParameters['format'], self.exportParameters['bitrate'])
         else:
             utils.println("No audio file to export")
 
