@@ -1,11 +1,16 @@
 # Library for the pydub
 from pydub import AudioSegment
+from pydub.utils import mediainfo
 from utils import utils
 
 def getAudioInfo(path, fileName):
     filePath = utils.buildFilePath(path, fileName)
     utils.println("Reading " + filePath)
     return AudioSegment.from_mp3(filePath)
+
+def getMediaInfo(path, fileName):
+    filePath = utils.buildFilePath(path, fileName)
+    return mediainfo(filePath)
         
 def normalizeAudio(songInfo, targetDbfsLevel):
     dbfsDifference = targetDbfsLevel - songInfo.dBFS
@@ -27,10 +32,13 @@ def normalizeAudio(songInfo, targetDbfsLevel):
         utils.println("volume is already normalized at " + str(targetDbfsLevel) + "dbfs")    
         return None
     
-def exportAudioFile(normalizedAudio, exportPath, exportFileName):
-    utils.println("Exporting")
+def exportAudioFile(normalizedAudio, exportPath, exportFileName, exportFormat, exportBitrate):
+    utils.println("Exporting audio in "+exportFormat+" format and at "+str(exportBitrate) + " bitrate")
+    
     exportFilePath = utils.buildFilePath(exportPath, exportFileName)
-    normalizedAudio.export(exportFilePath)
+    
+    normalizedAudio.export(exportFilePath, format=exportFormat, bitrate=exportBitrate)
+    
     utils.println("Successfully exported to " + exportFilePath)
     
 def fadeOut(songInfo, durationInSeconds = 0):
