@@ -9,8 +9,8 @@ class AppHeader:
     
     @classmethod
     def printAppHeader(cls):
-        utils.println("MP3 Volume Equelizer Version " + cls.versionNumber)
-        utils.println("A simple volume equeliver based on Pydub Python library")
+        utils.println("MP3 Volume Equalizer Version " + cls.versionNumber)
+        utils.println("A simple volume equalizer based on Pydub Python library")
     
 
 # main function
